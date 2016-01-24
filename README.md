@@ -4,7 +4,7 @@ are completely removed.
 
 (Shame on them for not removing themselves better.)
 
-This short script gives the user 3 options to clean with. 
+This short script gives the user 5 options to use. 
 
 Basic Clean: Removes the user.name and user.email from .gitconfig as well as 
 unsetting the password cache using commands built into git.
@@ -17,8 +17,12 @@ Because of the impossibility of knowing which keys belong to git, it is
 recommended that the user run these commands manually. However, if truly
 wanted, the script will take its best guess.
 
-There's also a fourth option, Set Credentials, that can be used to quickly set
-the user.name and user.email without typing the entire git config --global etc.
+Set Credentials: Quickly set/overwrite global user.name and user.email without
+typing the entire git config --global etc.
+
+Intensive Search: Finds all files
+
+
 
 To run:
 
