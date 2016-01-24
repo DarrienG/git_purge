@@ -9,6 +9,8 @@ SC_CHOICE="3"
 UE_CHOICE="4"
 QUIT="q"
 SSH_DIR=~/.ssh/git*
+SIMPLE=simple
+MATCHING=matching
 
 # Take input from user at beginning of clean type
 # Let's user decide if they want to follow through with cleans
@@ -101,7 +103,7 @@ ssh_clean ()
 	printf "> "
 
 	read INPUT
-	if [[ "$INPUT" ==  "$NO" ]]; then
+	if [[ "$INPUT" == "$NO" ]]; then
 		printf "Skipping autoclean; Please manually clean folder. \n"
 	else
 		# SSH_DIR refuses to link when input here, has to be hardcoded in
@@ -122,7 +124,7 @@ set_credentials ()
 	printf "Set global credentials for user.name and user.email\n"
 	printf "Makes it easier to reset global fields with less typing\n\n"
 
-	echo "Do you want to input your credentials?"
+	printf "Do you want to input your credentials? y/n\n> "
 	beginput
 
 	printf "Please enter the user.name you would like to be set as the global\n"
@@ -136,6 +138,21 @@ set_credentials ()
 	read USER_INPUT
 
 	git config --global user.email "$USER_INPUT"
+
+	until [[ "$BRANCH_INPUT" == "$SIMPLE" || "$BRANCH_INPUT" == "$MATCHING" ]]; do
+		printf "Would you like to set the default branching behavior as matching\n"
+		printf "or simple?\n"
+		printf "Simple is the recommended option. simple/matching\n> "
+		read BRANCH_INPUT
+		if [[ "$BRANCH_INPUT" == "$SIMPLE" || "$BRANCH_INPUT" == "$MATCHING" ]]; then
+			git config --global push.default "$BRANCH_INPUT"
+		else
+			printf "\n\nPlease enter a valid choice\n\n"
+		fi
+	done
+
+	printf "New global git settings: \n\n"
+	git config --global --list
 }
 
 printf "\n\nGit cleaning scipt %s - Darrien Glasser\n" "$VERSION"
