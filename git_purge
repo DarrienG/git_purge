@@ -6,6 +6,7 @@ VERSION="RC2.0"
 BC_CHOICE="1"
 HP_CHOICE="2"
 SC_CHOICE="3"
+UE_CHOICE="4"
 QUIT="q"
 SSH_DIR=~/.ssh/git*
 
@@ -115,12 +116,35 @@ ssh_clean ()
 	endput
 }
 
+set_credentials () 
+{
+	printf "\n____Set Credentials____\n\n"
+	printf "Set global credentials for user.name and user.email\n"
+	printf "Makes it easier to reset global fields with less typing\n\n"
+
+	echo "Do you want to input your credentials?"
+	beginput
+
+	printf "Please enter the user.name you would like to be set as the global\n"
+	printf "user.name\n> "
+	read USER_INPUT
+
+	git config --global user.name "$USER_INPUT"
+
+	printf "Please enter the user.email you would like to be set as the global\n"
+	printf "user.email\n> "
+	read USER_INPUT
+
+	git config --global user.email "$USER_INPUT"
+}
+
 printf "\n\nGit cleaning scipt %s - Darrien Glasser\n" "$VERSION"
 
 until [[ "$MENU_INPUT" == "q" ]]; do
 	echo -e "\n[1] Basic clean"
 	echo "[2] Heavy purge"
 	echo "[3] SSH clean"
+	echo "[4] Set credentials"
 	echo "[q] Quit"
 	printf "> "
 	read MENU_INPUT
@@ -130,10 +154,12 @@ until [[ "$MENU_INPUT" == "q" ]]; do
 		heavy_purge
 	elif [[ "$MENU_INPUT" == "$SC_CHOICE" ]]; then
 		ssh_clean
+	elif [[ "$MENU_INPUT" == "$UE_CHOICE" ]]; then
+		set_credentials
 	elif [[ "$MENU_INPUT" == "$QUIT" ]]; then
 		echo "Script end"
 		exit
 	fi
-done 
+done
 
 exit
