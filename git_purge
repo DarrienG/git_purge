@@ -1,0 +1,98 @@
+#!/usr/bin/env bash
+
+YES=y
+NO=n
+
+# Take input from user at beginning of clean type
+# Let's user decide if they want to follow through with cleans
+beginput ()
+{
+	read INPUT
+	if [[ "$INPUT" ==  "$NO" ]]; then
+		echo Clean terminated
+		exit
+	fi	
+}
+
+# Take input from user after each clean
+# Allows early termination of script if clean worked
+endput ()
+{
+	echo "Did it work? y/n"
+	printf "> "
+	read INPUT
+	if [[ "$INPUT" == "$YES" ]]; then
+		echo Clean finished
+		exit
+	fi	
+}
+
+# Locate .gitconfig 
+# Likely in ~/.gitconfig, but this way we cover all bases
+find_config () 
+{
+	PATHNAME=$(find ~/ -type f -iname .gitconfig)
+
+	SIZE=${#PATHNAME}
+
+	if [[ "$SIZE" -le 0 ]]; then
+		printf "Unable to locate gitconfig file. Cannot continue with operation.\n"
+	else
+		printf ".gitconfig found in: %s\n" "$PATHNAME\n"
+		printf "Destroying and recreating file...\n"
+		rm $PATHNAME; touch $PATHNAME
+	fi
+}
+
+printf "\n\nGit cleaning scipt v. 1.0 - Darrien Glasser\n\n"
+
+printf "____Basic Commands____\n"
+printf "Built in commands to clean git config file\n"
+
+echo "Begin clean? y/n"
+printf "> "
+
+beginput
+
+git config --global --unset-all user.name
+git config --global --unset-all user.email 
+
+endput
+
+printf "\n____Config Purge____\n"
+
+printf "Destroy and recreate config file\n\n"
+
+echo "Do you want to continue? y/n"
+printf "> "
+
+beginput
+
+find_config
+
+endput
+
+printf "\n____Auto SSH Purge____\n\n"
+printf "Automatically finds git related SSH keys, and destroys them.\n\n"
+printf "Because of the somewhat guessy nature of this portion, it's in your\n"
+printf "best interests to do this part manually. \n"
+
+printf "\nTo manually run this step, run these commands: \n\n"
+printf "> cd ~./ssh\n"
+printf "> rm [SSH KEYS CREATED FOR GIT]\n\n"
+
+echo "Do you want to autorun this part of the clean? y\n"
+printf "> "
+
+read INPUT
+if [[ "$INPUT" ==  "$NO" ]]; then
+	printf "Skipping autoclean; Please manually clean folder. \n"
+else
+	rm ~/.ssh/git*
+fi	
+
+endput
+
+echo "☹"
+echo "Script end"
+exit
