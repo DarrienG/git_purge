@@ -2,6 +2,7 @@
 
 YES=y
 NO=n
+VERSION="RC1.1"
 
 # Take input from user at beginning of clean type
 # Let's user decide if they want to follow through with cleans
@@ -18,6 +19,7 @@ beginput ()
 # Allows early termination of script if clean worked
 endput ()
 {
+	echo "Operation completed."
 	echo "Did it work? y/n"
 	printf "> "
 	read INPUT
@@ -39,12 +41,12 @@ find_config ()
 		printf "Unable to locate gitconfig file. Cannot continue with operation.\n"
 	else
 		printf ".gitconfig found in: %s\n" "$PATHNAME\n"
-		printf "Destroying and recreating file...\n"
+		echo "Destroying and recreating file..."
 		rm $PATHNAME; touch $PATHNAME
 	fi
 }
 
-printf "\n\nGit cleaning scipt v. 1.0 - Darrien Glasser\n\n"
+printf "\n\nGit cleaning scipt %s - Darrien Glasser\n\n" "$VERSION"
 
 printf "____Basic Commands____\n"
 printf "Built in commands to clean git config file\n"
@@ -61,7 +63,7 @@ endput
 
 printf "\n____Config Purge____\n"
 
-printf "Destroy and recreate config file\n\n"
+printf "Destroy and recreate config file, and purge git password cache.\n\n"
 
 echo "Do you want to continue? y/n"
 printf "> "
@@ -69,7 +71,8 @@ printf "> "
 beginput
 
 find_config
-
+printf "\nUnsetting password cache\n"
+git config --global --unset credential.helper
 endput
 
 printf "\n____Auto SSH Purge____\n\n"
@@ -78,7 +81,7 @@ printf "Because of the somewhat guessy nature of this portion, it's in your\n"
 printf "best interests to do this part manually. \n"
 
 printf "\nTo manually run this step, run these commands: \n\n"
-printf "> cd ~./ssh\n"
+printf "> cd ~/.ssh\n"
 printf "> rm [SSH KEYS CREATED FOR GIT]\n\n"
 
 echo "Do you want to autorun this part of the clean? y\n"
