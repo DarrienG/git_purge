@@ -1,8 +1,13 @@
 #!/usr/bin/env bash
 
-YES=y
-NO=n
+YES="y"
+NO="n"
 VERSION="RC1.1"
+BC_CHOICE="1"
+HP_CHOICE="2"
+SC_CHOICE="3"
+QUIT="q"
+SSH_DIR=~/.ssh/git*
 
 # Take input from user at beginning of clean type
 # Let's user decide if they want to follow through with cleans
@@ -40,62 +45,95 @@ find_config ()
 	if [[ "$SIZE" -le 0 ]]; then
 		printf "Unable to locate gitconfig file. Cannot continue with operation.\n"
 	else
-		printf ".gitconfig found in: %s\n" "$PATHNAME\n"
+		printf ".gitconfig found in: %s\n" "$PATHNAME"
 		echo "Destroying and recreating file..."
 		rm $PATHNAME; touch $PATHNAME
 	fi
 }
 
-printf "\n\nGit cleaning scipt %s - Darrien Glasser\n\n" "$VERSION"
 
-printf "____Basic Commands____\n"
-printf "Built in commands to clean git config file\n"
+basic_clean () 
+{
+	printf "\n____Basic Commands____\n"
+	printf "Use basic commands built into git to clean config file, and destroy\npassword cache\n\n"
 
-echo "Begin clean? y/n"
-printf "> "
+	echo "Begin clean? y/n"
+	printf "> "
 
-beginput
+	beginput
 
-git config --global --unset-all user.name
-git config --global --unset-all user.email 
+	echo "Unsetting global vars..."
+	git config --global --unset-all user.name
+	git config --global --unset-all user.email 
 
-endput
+	echo "Unsetting password cache..."
+	git config --global --unset credential.helper	
+	endput
+}
 
-printf "\n____Config Purge____\n"
+heavy_purge () 
+{
+	printf "\n____Heavy Purge____\n"
 
-printf "Destroy and recreate config file, and purge git password cache.\n\n"
+	printf "Destroy and recreate config file \n\n"
 
-echo "Do you want to continue? y/n"
-printf "> "
+	echo "Do you want to continue? y/n"
+	printf "> "
 
-beginput
+	beginput
+	find_config
+	endput	
+}
 
-find_config
-printf "\nUnsetting password cache\n"
-git config --global --unset credential.helper
-endput
+ssh_clean () 
+{
+	printf "\n____Auto SSH Purge____\n\n"
+	printf "Automatically finds git related SSH keys, and destroys them.\n\n"
+	printf "Because of the somewhat guessy nature of this portion, it's in your\n"
+	printf "best interests to do this part manually. \n"
 
-printf "\n____Auto SSH Purge____\n\n"
-printf "Automatically finds git related SSH keys, and destroys them.\n\n"
-printf "Because of the somewhat guessy nature of this portion, it's in your\n"
-printf "best interests to do this part manually. \n"
+	printf "\nTo manually run this step, run these commands: \n\n"
+	printf "> cd ~/.ssh\n"
+	printf "> rm [SSH KEYS CREATED FOR GIT]\n\n"
 
-printf "\nTo manually run this step, run these commands: \n\n"
-printf "> cd ~/.ssh\n"
-printf "> rm [SSH KEYS CREATED FOR GIT]\n\n"
+	echo "Do you want to autorun this part of the clean? y/n"
+	printf "> "
 
-echo "Do you want to autorun this part of the clean? y\n"
-printf "> "
+	read INPUT
+	if [[ "$INPUT" ==  "$NO" ]]; then
+		printf "Skipping autoclean; Please manually clean folder. \n"
+	else
+		# SSH_DIR refuses to link when input here, has to be hardcoded in
+		SIZE=$(ls -1 $SSH_DIR | wc -l)
+		if [[ "$SIZE" -gt 0 ]]; then
+			rm "$SSH_DIR"
+		else
+			printf "Cannot automatically find any git related SSH files. Please check manually.\n"
+		fi
+	fi	
 
-read INPUT
-if [[ "$INPUT" ==  "$NO" ]]; then
-	printf "Skipping autoclean; Please manually clean folder. \n"
-else
-	rm ~/.ssh/git*
-fi	
+	endput
+}
 
-endput
+printf "\n\nGit cleaning scipt %s - Darrien Glasser\n" "$VERSION"
 
-echo "☹"
-echo "Script end"
+until [[ "$MENU_INPUT" == "q" ]]; do
+	echo -e "\n[1] Basic clean"
+	echo "[2] Heavy purge"
+	echo "[3] SSH clean"
+	echo "[q] Quit"
+	printf "> "
+	read MENU_INPUT
+	if [[ "$MENU_INPUT" == "$BC_CHOICE" ]]; then
+		basic_clean
+	elif [[ "$MENU_INPUT" == "$HP_CHOICE" ]]; then
+		heavy_purge
+	elif [[ "$MENU_INPUT" == "$SC_CHOICE" ]]; then
+		ssh_clean
+	elif [[ "$MENU_INPUT" == "$QUIT" ]]; then
+		echo "Script end"
+		exit
+	fi
+done 
+
 exit
