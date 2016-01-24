@@ -4,17 +4,15 @@ are completely removed.
 
 (Shame on them for not removing themselves better.)
 
-This script cleans in three phases, and prompts the user at each phase with a 
-short description of what will happen at each one. 
+This short script gives the user 3 options to clean with. 
 
-Phase 1: Removes the user.name and user.email from .gitconfig using commands 
-built into git.
+Basic Clean: Removes the user.name and user.email from .gitconfig as well as 
+unsetting the password cache using commands built into git.
 
-Phase 2: Locates the user's .gitconfig file, and destroys it. Afterwards, the
-file is recreated to ensure there are no dependency errors. git password cache 
-is also unset as well.
+Heavy Purge: Locates the user's .gitconfig file, and destroys it. Afterwards, the
+file is recreated to ensure there are no dependency errors. 
 
-Phase 3: Destroys all possible .ssh keys likely associated with a git account.
+SSH Clean: Destroys all possible RSA keys likely associated with a git account.
 Because of the impossibility of knowing which keys belong to git, it is 
 recommended that the user run these commands manually. However, if truly
 wanted, the script will take its best guess.
