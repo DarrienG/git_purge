@@ -11,7 +11,8 @@ Phase 1: Removes the user.name and user.email from .gitconfig using commands
 built into git.
 
 Phase 2: Locates the user's .gitconfig file, and destroys it. Afterwards, the
-file is recreated to ensure there are no dependency errors.
+file is recreated to ensure there are no dependency errors. git password cache 
+is also unset as well.
 
 Phase 3: Destroys all possible .ssh keys likely associated with a git account.
 Because of the impossibility of knowing which keys belong to git, it is 
