@@ -2,18 +2,21 @@
 
 YES="y"
 NO="n"
-VERSION="RC2.1"
+VERSION="RC2.2"
 BC_CHOICE="1"
 HP_CHOICE="2"
 SC_CHOICE="3"
 UE_CHOICE="4"
+IS_CHOICE="5"
 QUIT="q"
 SSH_DIR=~/.ssh/git*
 SIMPLE=simple
 MATCHING=matching
+# File name to search in option 5. Default set to DarrienG
+FILENAME=DarrienG
 
 # Take input from user at beginning of clean type
-# Let's user decide if they want to follow through with cleans
+# Lets user decide if they want to follow through with cleans
 beginput ()
 {
 	read INPUT
@@ -151,17 +154,56 @@ set_credentials ()
 		fi
 	done
 
-	printf "New global git settings: \n\n"
+	printf "\nNew global git settings: \n\n"
 	git config --global --list
+}
+
+intensive_search () 
+{
+	printf "\n____Intensive Search____\n\n"
+	printf "Fires off an intensive search of the user's HOME directory for\n"
+	printf "all files and files with a certain term in them. Results are \n"
+	printf "dumped in a file 'i_search.txt'\n\n"
+	printf "This is a fairly resource intensive operation, and the amount of\n"
+	printf "of time it takes is dependent upon how many files are are in your\n"
+	printf "HOME directory.\n"
+	printf "\nIt is in your best interests to connect your device to a charger\n"
+	printf "if it is a mobile device.\n\n"
+
+	printf "Do you want to continue with this operation? y/n\n> "
+	beginput
+
+	until [[ "$SEARCH_INPUT" == "1" || "$SEARCH_INPUT" == "2" || "$SEARCH_INPUT" == "$QUIT" ]]; do
+		printf "\nThere are three options for search, grep, find, and locate.\n"
+		printf "[1] 'grep' is far reaching, but the most resource intensive\n"
+		printf "[2] 'locate' is the incredibly fast, but less accurate, and\n"
+		printf "not as far reaching.*"
+
+		printf "\nTo increase 'locate' accuracy, open up another terminal,\n"
+		printf "and run the command 'sudo updatedb'\n> "
+
+		read SEARCH_INPUT
+
+		if [[ "$SEARCH_INPUT" == "1" ]]; then
+			grep -r "$FILENAME" ~/ > i_search.txt
+		elif [[ "$SEACH_INPUT" == "2" ]]; then
+			locate ~/ -A "$FILENAME" > i_search.txt
+		elif [[ "$SEARCH_INPUT" == "$QUIT" ]]; then
+			printf "No search conducted. Returning to main menu.\n"
+		fi
+	done
+	SEARCH_INPUT=null
+
 }
 
 printf "\n\nGit cleaning scipt %s - Darrien Glasser\n" "$VERSION"
 
-until [[ "$MENU_INPUT" == "q" ]]; do
+until [[ "$MENU_INPUT" == "$QUIT" ]]; do
 	echo -e "\n[1] Basic clean"
 	echo "[2] Heavy purge"
 	echo "[3] SSH clean"
 	echo "[4] Set credentials"
+	echo "[5] Intensive search"
 	echo "[q] Quit"
 	printf "> "
 	read MENU_INPUT
@@ -173,6 +215,8 @@ until [[ "$MENU_INPUT" == "q" ]]; do
 		ssh_clean
 	elif [[ "$MENU_INPUT" == "$UE_CHOICE" ]]; then
 		set_credentials
+	elif [[ "$MENU_INPUT" == "$IS_CHOICE" ]]; then
+		intensive_search
 	elif [[ "$MENU_INPUT" == "$QUIT" ]]; then
 		echo "Script end"
 		exit
