@@ -17,6 +17,9 @@ Because of the impossibility of knowing which keys belong to git, it is
 recommended that the user run these commands manually. However, if truly
 wanted, the script will take its best guess.
 
+There's also a fourth option, Set Credentials, that can be used to quickly set
+the user.name and user.email without typing the entire git config --global etc.
+
 To run:
 
 ```
