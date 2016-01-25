@@ -35,4 +35,4 @@ chmod a+x git_purge
 To test that the script worked, find a repository of your own, make a small change, 
 and then go through the process of pushing it. You should be intercepted at the 
 commit command, asking you to re-enter credentials, but a full push may be required
-to see the effects.. 
+to see the effects.
