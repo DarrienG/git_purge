@@ -20,7 +20,8 @@ wanted, the script will take its best guess.
 Set Credentials: Quickly set/overwrite global user.name and user.email without
 typing the entire git config --global etc.
 
-Intensive Search: Finds all files
+Intensive Search: Finds all files relating to problem account. User can then 
+quickly find the ones needed to be destroyed, and manually delete them.
 
 
 
@@ -30,3 +31,8 @@ To run:
 chmod a+x git_purge
 ./git_purge
 ```
+
+To test that the script worked, find a repository of your own, make a small change, 
+and then go through the process of pushing it. You should be intercepted at the 
+commit command, asking you to re-enter credentials, but a full push may be required
+to see the effects.. 
