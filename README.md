@@ -9,8 +9,9 @@ This short script gives the user 5 options to use.
 Basic Clean: Removes the user.name and user.email from .gitconfig as well as 
 unsetting the password cache using commands built into git.
 
-Heavy Purge: Locates the user's .gitconfig file, and destroys it. Afterwards, the
-file is recreated to ensure there are no dependency errors. 
+Heavy Purge: Locates all instances of user's .gitconfig file, and destroys 
+destroys them. Afterwards, the files are recreated to ensure there are no 
+dependency errors. 
 
 SSH Clean: Destroys all possible RSA keys likely associated with a git account.
 Because of the impossibility of knowing which keys belong to git, it is 

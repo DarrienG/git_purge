@@ -81,7 +81,7 @@ heavy_purge ()
 {
 	printf "\n____Heavy Purge____\n"
 
-	printf "Destroy and recreate config file \n\n"
+	printf "Destroy and recreate all instances of config file \n\n"
 
 	echo "Do you want to continue? y/n"
 	printf "> "
@@ -175,19 +175,25 @@ intensive_search ()
 
 	until [[ "$SEARCH_INPUT" == "1" || "$SEARCH_INPUT" == "2" || "$SEARCH_INPUT" == "$QUIT" ]]; do
 		printf "\nThere are three options for search, grep, find, and locate.\n"
-		printf "[1] 'grep' is far reaching, but the most resource intensive\n"
+		printf "[1] 'grep' is far reaching, but very resource intensive\n"
 		printf "[2] 'locate' is the incredibly fast, but less accurate, and\n"
 		printf "not as far reaching.*"
 
-		printf "\nTo increase 'locate' accuracy, open up another terminal,\n"
+		printf "\n*To increase 'locate' accuracy, open up another terminal,\n"
 		printf "and run the command 'sudo updatedb'\n> "
 
 		read SEARCH_INPUT
 
 		if [[ "$SEARCH_INPUT" == "1" ]]; then
-			grep -r "$FILENAME" ~/ > i_search.txt
-		elif [[ "$SEACH_INPUT" == "2" ]]; then
-			locate ~/ -A "$FILENAME" > i_search.txt
+			printf "____GREP: ALL INSTANCES OF %s____" "$FILENAME" > i_search.txt
+			grep -r "$FILENAME" ~/ >> i_search.txt
+			echo "____FIND: ALL INSTANCES OF GITCONFIG____" >> i_search.txt
+			find ~/ -type f -iname .gitconfig >> i_search.txt
+		elif [[ "$SEARCH_INPUT" == "2" ]]; then
+			printf "____LOCATE: ALL INSTANCES OF %s____" "$FILENAME" > i_search.txt
+			locate ~/ -A "$FILENAME" >> i_search.txt
+			echo "____LOCATE: ALL INSTANCES OF GITCONFIG____" >> i_search.txt
+			locate ~/ -A .gitconfig >> i_search.txt
 		elif [[ "$SEARCH_INPUT" == "$QUIT" ]]; then
 			printf "No search conducted. Returning to main menu.\n"
 		fi
