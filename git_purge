@@ -2,7 +2,7 @@
 
 YES="y"
 NO="n"
-VERSION="RC2.2.1"
+VERSION="RC2.2.3"
 BC_CHOICE="1"
 HP_CHOICE="2"
 SC_CHOICE="3"
@@ -81,7 +81,7 @@ heavy_purge ()
 {
 	printf "\n____Heavy Purge____\n"
 
-	printf "Destroy and recreate all instances of config file \n\n"
+	printf "Destroy all instances of .gitconfig file, and create one local one.\n\n"
 
 	echo "Do you want to continue? y/n"
 	printf "> "
